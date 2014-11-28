@@ -4,7 +4,7 @@ var _ 					= require('underscore'),
 
 module.exports = (function () {
 	function logRequest (req, res, next) {
-		console.info((new Date()).toGMTString().blue, [req.method.red, req.url.green.underline].join(' '));
+		console.info((new Date()).toGMTString().blue, [req.method.red, req.url.green.underline, (req.headers['x-forwarded-for'] || req.connection.remoteAddress).yellow].join(' '));
 
 		return next();
 	}
@@ -33,7 +33,7 @@ module.exports = (function () {
 		console.info(heartString.red);
 		console.info('\u2665'.red + '                ' + 'HELT'.red.bold + '               ' + '\u2665'.red);
 		console.info('\u2665'.red + '                                   ' + '\u2665'.red);
-		console.info('\u2665 '.red + '  Server: %s    '.italic + ' \u2665'.red, server.url.green);
+		console.info('\u2665 '.red + '  Server: %s    '.italic + ' \u2665'.red, server.url.green + new Array(20 - server.url.length).join(' '));
 		console.info(heartString.red + '\n\n');
 	}
 

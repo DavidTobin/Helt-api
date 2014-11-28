@@ -15,12 +15,6 @@ server.use(restify.bodyParser());
 server.use(restify.CORS(ServerConfig.CORS));
 server.use(restify.throttle(ServerConfig.throttle));
 
-server.use(function (req, res, next) {
-  console.log(req.headers.Authorization);
-
-  return next();
-});
-
 // Route handling
 _.each(Routes, function (options) {
   server[options.type](options.url, options.func);
