@@ -17,9 +17,17 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    classMethods: {
+    instanceMethods: {
       verifyPassword: function (password) {
-        return hash.verify(password, this.getDataValue(password));
+        return hash.verify(password, this.getDataValue('password'));
+      },
+
+      toJSON: function () {
+        var json = this.values;
+
+        delete json.password;
+
+        return json;
       }
     }
   });

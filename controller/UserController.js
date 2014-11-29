@@ -2,6 +2,14 @@ module.exports = (function (db) {
 	'use strict';
 
 	var UserController =  {
+    _verify: function (type, data) {
+      console.log(data);
+      switch (type) {
+        case 'create':
+          return data && data.name && data.email;
+      }
+    },
+
 		_sendError: function (err) {
 			return this.json(400, {
 				error: err
@@ -51,7 +59,7 @@ module.exports = (function (db) {
 					return UserController._sendError.bind(res)('You are already logged in');
 				}
 
-        if (!req.body.name || !req.body.email) {
+        if (!UserController._verify('create', req.body)) {
           return UserController._sendError.bind(res)('Missing required parameter');
         }
 
@@ -68,7 +76,11 @@ module.exports = (function (db) {
 
 						return UserController._updateUser.bind(user)(req, res, next);
 					});
-			}
+			},
+
+      me: function (req, res, next) {
+        return res.json(req.user || {});
+      }
 		}
 	};
 

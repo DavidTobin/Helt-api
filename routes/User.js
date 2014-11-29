@@ -2,6 +2,12 @@ module.exports = (function (UserController) {
 	return [
     {
       type: 'get',
+      url: '/user/me',
+      func: UserController.me
+    },
+
+    {
+      type: 'get',
       url: '/user/:id',
       func: UserController.read,
       authenticate: true

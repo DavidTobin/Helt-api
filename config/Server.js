@@ -11,6 +11,8 @@ module.exports = (function () {
 			rate: 5,
 			burst: 10,
 			ip: true
-		}
+		},
+
+    tokenSecret: 'mymilkshakebringsalltheboystotheyard'
 	};
 })();
