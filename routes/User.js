@@ -2,15 +2,10 @@ module.exports = (function (UserController) {
 	return [
     {
       type: 'get',
-      url: '/user/me',
-      func: UserController.me
-    },
-
-    {
-      type: 'get',
       url: '/user/:id',
       func: UserController.read,
-      authenticate: true
+      authenticate: true,
+      roles: ['self']
     },
 
 		{
@@ -22,7 +17,8 @@ module.exports = (function (UserController) {
 		{
 			type: 'put',
 			url: '/user/:id',
-			func: UserController.update
+			func: UserController.update,
+      roles: ['self']
 		}
 	]
 })(

@@ -3,7 +3,6 @@ module.exports = (function (db) {
 
 	var UserController =  {
     _verify: function (type, data) {
-      console.log(data);
       switch (type) {
         case 'create':
           return data && data.name && data.email;
@@ -43,6 +42,7 @@ module.exports = (function (db) {
           db.User
             .find(req.params.id)
             .success(function (user) {
+              console.log(user);
               if (!user) {
                 return UserController._sendError.bind(res)('User not found');
               }
@@ -78,8 +78,19 @@ module.exports = (function (db) {
 					});
 			},
 
-      me: function (req, res, next) {
-        return res.json(req.user || {});
+      updateGym: function (req, res, next) {
+        if (!UserController._verify('updateGym', req.body)) {
+          return UserController._sendError.bind(res)('Unable to update Gym');
+        }
+
+        req.user
+          .setGym(req.body.gymId)
+          .success(function (user) {
+            return res.json(user);
+          })
+          .error(function (err) {
+            return UserController._sendError.bind(res)(err);
+          });
       }
 		}
 	};

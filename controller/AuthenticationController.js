@@ -8,11 +8,10 @@ module.exports = (function (db) {
 
   AuthenticationController = {
     _verify: function (body) {
-      return body.email && body.password;
+      return body && body.email && body.password;
     },
 
     _error: function (error) {
-      console.log(error);
       return this.json(400, error);
     },
 

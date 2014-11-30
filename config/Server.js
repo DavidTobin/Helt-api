@@ -4,7 +4,8 @@ module.exports = (function () {
 		environment: 'development',
 
 		CORS: {
-      origins: ['*']
+      origins: ['*'],
+      headers: []
     },
 
 		throttle: {

@@ -3,14 +3,13 @@ var _ 					= require('underscore'),
 		heartString = '';
 
 module.exports = (function () {
-	function logRequest (req, res, next) {
+	function logRequest (req, res, next, err) {
+    if (err) {
+      console.log(err);
+    }
 		console.info((new Date()).toGMTString().blue, [req.method.red, req.url.green.underline, (req.headers['x-forwarded-for'] || req.connection.remoteAddress).yellow].join(' '));
 
 		return next();
-	}
-
-	function logAfterRequest (req, res, next) {
-		console.info((new Date()).toGMTString().blue, 'Request Status'.dim, res.statusCode);
 	}
 
 	function ensureJSON (req, res, next) {
@@ -41,7 +40,6 @@ module.exports = (function () {
 		customHeaders: customHeaders,
 		ensureJSON: ensureJSON,
 		startServerLog: startServerLog,
-		logRequest: logRequest,
-		logAfterRequest: logAfterRequest
+		logRequest: logRequest
 	};
 })();

@@ -15,8 +15,17 @@ module.exports = function(sequelize, DataTypes) {
           saltLength: 24
         }));
       }
-    }
+    },
+    roles: DataTypes.ARRAY(DataTypes.STRING)
   }, {
+    classMethods: {
+      associate: function(models) {
+        this.hasOne(models.Gym, {
+          foreignKey: 'gymId'
+        });
+      }
+    },
+
     instanceMethods: {
       verifyPassword: function (password) {
         return hash.verify(password, this.getDataValue('password'));
@@ -28,6 +37,10 @@ module.exports = function(sequelize, DataTypes) {
         delete json.password;
 
         return json;
+      },
+
+      isSuperUser: function () {
+        return this.values.roles.superuser || true;
       }
     }
   });
