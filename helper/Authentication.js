@@ -11,8 +11,6 @@ module.exports = (function (db) {
         req.authorization.decoded = jwt.decode(req.authorization.key, ServerConfig.tokenSecret);
 
         if (req.authorization.decoded.iss) {
-          req.user = null;
-
           db.User
             .find(req.authorization.decoded.iss)
             .success(function (user) {
@@ -20,8 +18,8 @@ module.exports = (function (db) {
 
               return next();
             })
-            .error(function () {
-              return next();
+            .error(function (err) {
+              return next(err);
             });
         }
       } else {

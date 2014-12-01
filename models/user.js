@@ -16,13 +16,22 @@ module.exports = function(sequelize, DataTypes) {
         }));
       }
     },
-    roles: DataTypes.ARRAY(DataTypes.STRING)
+    roles: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+
+      set: function () {
+        if (!this.getDataValue('id')) {
+          this.setDataValue('roles', []);
+        }
+      }
+    }
   }, {
     classMethods: {
       associate: function(models) {
-        this.hasOne(models.Gym, {
+        models.User.hasOne(models.Gym, {
           foreignKey: 'gymId'
         });
+        console.log(models.User);
       }
     },
 

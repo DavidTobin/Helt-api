@@ -6,6 +6,9 @@ module.exports = (function (db) {
       switch (type) {
         case 'create':
           return data && data.name && data.email;
+
+        case 'update':
+          return data && data.id;
       }
     },
 
@@ -33,7 +36,10 @@ module.exports = (function (db) {
 				.updateAttributes(req.body)
 				.success(function (user) {
 					return res.json(user);
-				});
+				})
+        .error(function (err) {
+          return UserController._sendError.bind(res)(err);
+        });
 		},
 
 		API: {
@@ -67,6 +73,10 @@ module.exports = (function (db) {
 			},
 
 			update: function (req, res, next) {
+        if (!UserController._verify('update', req.params)) {
+          return UserController._sendError.bind(res)('No user to update');
+        }
+
 				db.User
 					.find(req.params.id)
 					.success(function (user) {
@@ -76,22 +86,7 @@ module.exports = (function (db) {
 
 						return UserController._updateUser.bind(user)(req, res, next);
 					});
-			},
-
-      updateGym: function (req, res, next) {
-        if (!UserController._verify('updateGym', req.body)) {
-          return UserController._sendError.bind(res)('Unable to update Gym');
-        }
-
-        req.user
-          .setGym(req.body.gymId)
-          .success(function (user) {
-            return res.json(user);
-          })
-          .error(function (err) {
-            return UserController._sendError.bind(res)(err);
-          });
-      }
+			}
 		}
 	};
 

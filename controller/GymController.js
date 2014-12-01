@@ -7,7 +7,16 @@ module.exports = (function (db) {
       switch (type) {
         case 'create':
           return body && body.name;
+
+        case 'updateGym':
+          return body && body.gymId;
       }
+    },
+
+    _sendError: function (err) {
+      return this.json(400, {
+        error: err
+      });
     },
 
     API: {
@@ -53,6 +62,23 @@ module.exports = (function (db) {
             calories: -138
           }
         ]);
+      },
+
+      updateGym: function (req, res, next) {
+        if (!GymController._verify('updateGym', req.body)) {
+          return GymController._sendError.bind(res)('Unable to update Gym');
+        }
+
+        console.log(req.user);
+
+        db.User
+          .setGym(req.body.gymId)
+          .success(function (user) {
+            return res.json(user);
+          })
+          .error(function (err) {
+            return GymController._sendError.bind(res)(err);
+          });
       }
     }
   }
