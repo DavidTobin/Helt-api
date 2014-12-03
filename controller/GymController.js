@@ -1,6 +1,6 @@
 module.exports = (function (db) {
   'use strict';
-  var DAY = 1000 * 60 * 24;
+  var DAY = 1000 * 60 * 60 * 24;
 
   var GymController =  {
     _verify: function (type, body) {
@@ -82,6 +82,16 @@ module.exports = (function (db) {
           {
             date: +new Date() - (DAY * 2),
             calories: -138
+          },
+
+          {
+            date: +new Date() - (DAY * 30),
+            calories: -200
+          },
+
+          {
+            date: +new Date() - (DAY * 25),
+            calories: -200
           }
         ]);
       },
