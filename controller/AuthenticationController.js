@@ -32,6 +32,7 @@ module.exports = (function (db) {
           }
         })
         .success(function (user) {
+          console.log(user);
           if (!user) {
             return AuthenticationController._error.bind(res)({
               key: 'incorrect_login',

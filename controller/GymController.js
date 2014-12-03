@@ -8,6 +8,9 @@ module.exports = (function (db) {
         case 'create':
           return body && body.name;
 
+        case 'read':
+          return body && body.gymId && typeof(parseInt(body.gymId)) === 'number';
+
         case 'updateGym':
           return body && body.gymId;
       }
@@ -39,7 +42,26 @@ module.exports = (function (db) {
       },
 
       read: function (req, res, next) {
+        if (!GymController._verify('read', req.user)) {
+          return GymController._sendError.bind(res)('Unable to find Gym');
+        }
 
+        if (parseInt(req.params.gymId) !== req.user.gymId) {
+          return res.send(401);
+        }
+
+        db.Gym
+          .find(parseInt(req.user.gymId))
+          .success(function (gym) {
+            gym
+              .addUser(req.user.id)
+              .success(function (user) {
+                return res.json(gym);
+              })
+              .error(function (err) {
+                return GymController._sendError.bind(res)(err);
+              });
+          });
       },
 
       update: function (req, res, next) {
@@ -51,7 +73,7 @@ module.exports = (function (db) {
       },
 
       readWork: function (req, res, next) {
-        res.json([
+        return res.json([
           {
             date: +new Date() - (DAY),
             calories: -231
@@ -69,15 +91,20 @@ module.exports = (function (db) {
           return GymController._sendError.bind(res)('Unable to update Gym');
         }
 
-        console.log(req.user);
-
-        db.User
-          .setGym(req.body.gymId)
-          .success(function (user) {
-            return res.json(user);
-          })
-          .error(function (err) {
-            return GymController._sendError.bind(res)(err);
+        db.Gym
+          .find(req.body.gymId)
+          .success(function (gym) {
+            gym
+              .addUser(req.user.id)
+              .success(function (user) {
+                return res.json({
+                  gym: gym,
+                  user: user
+                });
+              })
+              .error(function (err) {
+                return GymController._sendError.bind(res)(err);
+              });
           });
       }
     }

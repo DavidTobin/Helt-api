@@ -1,9 +1,9 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-  var hash = require('password-hash'), User;
+  var hash = require('password-hash');
 
-  User = sequelize.define("User", {
+  var User = sequelize.define("User", {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: {
@@ -21,17 +21,16 @@ module.exports = function(sequelize, DataTypes) {
 
       set: function () {
         if (!this.getDataValue('id')) {
-          this.setDataValue('roles', []);
+          this.setDataValue('roles', ['user']);
         }
       }
     }
   }, {
     classMethods: {
       associate: function(models) {
-        models.User.hasOne(models.Gym, {
+        models.User.belongsTo(models.Gym, {
           foreignKey: 'gymId'
         });
-        console.log(models.User);
       }
     },
 
@@ -49,7 +48,7 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       isSuperUser: function () {
-        return this.values.roles.superuser || true;
+        return this.values.roles.indexOf('superuser') !== -1;
       }
     }
   });

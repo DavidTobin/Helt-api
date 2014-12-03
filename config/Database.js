@@ -2,23 +2,48 @@ module.exports = (function () {
 	'use strict';
 
 	return {
-		dialect: 'postgresql',
-		host: 'localhost',
+	  development: {
+	    username: 'postgres',
+	    password: 'admin',
+	    database: 'helt_devbase',
+	    host: '127.0.0.1',
+	    dialect: 'postgres',
+	    logging: false,
+	    omitNull: true,
 
-		sync: {
-			force: false
-		},
+	    paranoid: true,
 
-		log: false,
+	    sync: {
+	    	force: true
+	    },
 
-		development: {
-			database: 'helt_devbase',
-			username: 'postgres',
-			password: 'admin'
-		},
+	    defaultUser: {
+	    	name: 'David Tobin',
+	    	email: 'dtobin08@gmail.com',
+	    	password: 'admin',
+	    	gymId: 1,
+	    	roles: ['admin']
+	    },
 
-		production: {
-			database: 'helt_prodbase'
-		}
+	    defaultGym: {
+	    	name: 'Educogym Blackrock'
+	    }
+	  },
+
+	  test: {
+	    username: 'postgres',
+	    password: 'admin',
+	    database: 'helt_devbase',
+	    host: '127.0.0.1',
+	    dialect: 'postgres'
+	  },
+
+	  production: {
+	    username: 'postgres',
+	    password: 'admin',
+	    database: 'helt_prodbase',
+	  	host: '127.0.0.1',
+	    dialect: 'postgres'
+	  }
 	};
 })();

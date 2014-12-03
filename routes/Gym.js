@@ -8,6 +8,13 @@ module.exports = (function (GymController) {
     },
 
     {
+      type: 'get',
+      url: '/user/:id/gym/:gymId',
+      func: GymController.read,
+      roles: ['self']
+    },
+
+    {
       type: 'put',
       url: '/user/:id/gym',
       func: GymController.updateGym,
@@ -20,7 +27,7 @@ module.exports = (function (GymController) {
       func: GymController.readWork,
       roles: ['loggedIn']
     }
-  ]
+  ];
 })(
   require('../controller/GymController')
 );
