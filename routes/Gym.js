@@ -1,6 +1,12 @@
 module.exports = (function (GymController) {
   return [
     {
+      type: 'get',
+      url: '/gym',
+      func: GymController.readAll
+    },
+
+    {
       type: 'post',
       url: '/gym',
       func: GymController.create,

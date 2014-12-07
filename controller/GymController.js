@@ -41,6 +41,17 @@ module.exports = (function (db) {
         }
       },
 
+      readAll: function (req, res, next) {
+        db.Gym
+          .findAll()
+          .success(function (gyms) {
+            return res.json(gyms);
+          })
+          .error(function (error) {
+            return GymController._sendError.bind(res)(error);
+          });
+      },
+
       read: function (req, res, next) {
         if (!GymController._verify('read', req.user)) {
           return GymController._sendError.bind(res)('Unable to find Gym');
@@ -76,22 +87,22 @@ module.exports = (function (db) {
         return res.json([
           {
             date: +new Date() - (DAY),
-            calories: -231
+            calories: -1221
           },
 
           {
             date: +new Date() - (DAY * 2),
-            calories: -138
+            calories: -1200
           },
 
           {
             date: +new Date() - (DAY * 30),
-            calories: -200
+            calories: -723
           },
 
           {
             date: +new Date() - (DAY * 25),
-            calories: -200
+            calories: -500
           }
         ]);
       },

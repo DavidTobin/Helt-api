@@ -6,6 +6,18 @@ module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
+    gender: DataTypes.ENUM('male', 'female'),
+    age: DataTypes.INTEGER,
+    weight: DataTypes.FLOAT,
+    height: DataTypes.FLOAT,
+    weightGoal: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    energyExpenditure: {
+      type: DataTypes.FLOAT,
+      defaultValue: 1
+    },
     password: {
       type: DataTypes.STRING,
 
