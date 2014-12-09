@@ -16,7 +16,7 @@ module.exports = (function (db) {
     },
 
     API: {
-      token: function (req, res, next) {
+      token: function (req, res) {
         var token = '';
 
         if (!AuthenticationController._verify(req.body)) {
@@ -32,18 +32,17 @@ module.exports = (function (db) {
           }
         })
         .success(function (user) {
-          console.log(user);
           if (!user) {
             return AuthenticationController._error.bind(res)({
               key: 'incorrect_login',
-              msg: 'Incorrect details provided'
+              msg: 'We couldn\'t find anyone with that email address.'
             });
           }
 
           if (!user.verifyPassword(req.body.password)) {
             return AuthenticationController._error.bind(res)({
               key: 'incorrect_password',
-              msg: 'Incorrect password provided'
+              msg: 'You could not find anyone with that email address or password.'
             });
           }
 

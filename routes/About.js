@@ -2,7 +2,7 @@ module.exports = (function (AboutController) {
 	return [
 		{
 			type: 'get',
-			url: '/about',
+			url: '/',
 			func: AboutController.index
 		}
 	]

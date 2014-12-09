@@ -4,7 +4,7 @@ module.exports = (function () {
 		environment: 'development',
 
 		CORS: {
-      origins: ['*'],
+      origins: ['http://helt.dev', 'http://helt.io'],
       headers: []
     },
 

@@ -19,7 +19,14 @@ module.exports = (function (db) {
 		},
 
 		_createUser: function (req, res, next) {
-			db.User.build(req.body)
+			var user = db.User.build(req.body);
+
+      if (!user.validate()) {
+        UserController._sendError.bind(res)(user.validate());
+      }
+
+      user
+      .validate()
 			.save()
 			.success(function (user) {
 				return res.json(user);
@@ -34,6 +41,7 @@ module.exports = (function (db) {
 		_updateUser: function (req, res, next) {
 			this
 				.updateAttributes(req.body)
+        .validate()
 				.success(function (user) {
 					return res.json(user);
 				})
@@ -43,12 +51,11 @@ module.exports = (function (db) {
 		},
 
 		API: {
-      read: function (req, res, next) {
+      read: function (req, res) {
         if (parseInt(req.params.id) > 0) {
           db.User
             .find(req.params.id)
             .success(function (user) {
-              console.log(user);
               if (!user) {
                 return UserController._sendError.bind(res)('User not found');
               }
@@ -58,6 +65,17 @@ module.exports = (function (db) {
         } else {
           return UserController._sendError.bind(res)('Missing parameter: id');
         }
+      },
+
+      readAll: function (req, res) {
+      	db.User
+      		.findAll()
+      		.success(function (users) {
+      			return res.json(users);
+      		})
+      		.error(function (error) {
+      			return UserController._sendError.bind(res)(error);
+      		});
       },
 
 			create: function (req, res, next) {
@@ -75,6 +93,11 @@ module.exports = (function (db) {
 			update: function (req, res, next) {
         if (!UserController._verify('update', req.params)) {
           return UserController._sendError.bind(res)('No user to update');
+        }
+
+        // Make sure roles aren't updated
+        if (req.body.roles && !req.user.isSuperUser()) {
+        	req.body.roles = req.user.roles;
         }
 
 				db.User

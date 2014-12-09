@@ -17,13 +17,35 @@ module.exports = (function () {
 	    	force: true
 	    },
 
-	    defaultUser: {
-	    	name: 'David Tobin',
-	    	email: 'dtobin08@gmail.com',
-	    	password: 'admin',
-	    	gymId: 1,
-	    	roles: ['admin']
-	    },
+	    defaultUsers: [
+	    	{
+		    	name: 'David Tobin',
+		    	email: 'dtobin08@gmail.com',
+		    	password: 'admin',
+		    	gymId: 1,
+		    	gender: 'male',
+		    	height: 180,
+		    	age: 22,
+		    	weight: 200,
+		    	weightGoal: -2,
+		    	energyExpenditure: 1.2,
+		    	roles: ['admin']
+	    	},
+
+	    	{
+	    		name: 'John Doe',
+		    	email: 'john@gmail.com',
+		    	password: 'admin',
+		    	gymId: 1,
+		    	gender: 'male',
+		    	height: 180,
+		    	age: 22,
+		    	weight: 200,
+		    	weightGoal: -2,
+		    	energyExpenditure: 1.2,
+		    	roles: ['user']
+	    	}
+	    ],
 
 	    defaultGym: {
 	    	name: 'Educogym Blackrock'

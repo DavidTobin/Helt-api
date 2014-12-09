@@ -16,6 +16,11 @@ module.exports = (function (db) {
             .success(function (user) {
               req.user = user;
 
+              // Change me ID to user id
+              if (req.params.id === 'me') {
+                req.params.id = req.user.id;
+              }
+
               return next();
             })
             .error(function (err) {

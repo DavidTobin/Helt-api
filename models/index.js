@@ -5,6 +5,7 @@ var path      = require("path");
 var Sequelize = require("sequelize");
 var env       = process.env.NODE_ENV || "development";
 var config    = require(__dirname + '/../config/Database')[env];
+var _         = require('underscore');
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db        = {};
 
@@ -34,21 +35,28 @@ setTimeout(function () {
     .success(function (gym) {
       console.log('Created default gym...');
 
-      db.User
-        .create(config.defaultUser)
-        .success(function (user) {
-          var roles = config.defaultUser.roles;
+      _.each(config.defaultUsers, function (defaultUser) {
+        db.User
+          .build(defaultUser)
+          .save()
+          .error(function (err) {
+            return console.error(err);
+          })
+          .success(function (user) {
+            var roles = defaultUser.roles;
 
-          roles.push('user');
+            roles.push('user');
 
-          console.log('Created dev user...');
-
-          user.updateAttributes({
-            roles: roles
-          }).success(function () {
-            console.log('Updated roles to ', roles);
+            console.log('Created dev user...');
+            if (user) {
+              user.updateAttributes({
+                roles: roles
+              }).success(function (u) {
+                console.log('Updated roles to ', roles, u.roles);
+              });
+            }
           });
-        });
+      });
     })
 }, 1000);
 

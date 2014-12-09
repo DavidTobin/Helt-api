@@ -1,10 +1,16 @@
 module.exports = (function (UserController) {
 	return [
+		{
+			type: 'get',
+			url: '/user',
+			func: UserController.readAll,
+			roles: ['isSuperUser']
+		},
+
     {
       type: 'get',
       url: '/user/:id',
       func: UserController.read,
-      authenticate: true,
       roles: ['self']
     },
 
@@ -20,7 +26,7 @@ module.exports = (function (UserController) {
 			func: UserController.update,
       roles: ['self']
 		}
-	]
+	];
 })(
 	require('../controller/UserController')
 );

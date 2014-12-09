@@ -27,13 +27,16 @@ server.use(restify.CORS(ServerConfig.CORS));
 server.use(restify.queryParser());
 server.use(restify.fullResponse());
 
+
 // Route handling
 _.each(Routes, function (options) {
   server[options.type](options.url, function (req, res, next) {
     // Check roles
     if (options.roles) {
       if (!RoleHelper.checkRole(options.roles, req)) {
-        return res.send(403);
+        return res.json(403, {
+          error: 'You do not have permission to do that'
+        });
       }
     }
 
@@ -42,7 +45,7 @@ _.each(Routes, function (options) {
 });
 
 // Sync database
-require('./models').sequelize.sync();
+db.sequelize.sync();
 
 // ....annnnnd start
 server.listen(ServerConfig.port, function () {
