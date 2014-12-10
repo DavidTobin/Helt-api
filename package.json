@@ -5,6 +5,7 @@
     "pg": "^4.0.0",
     "restify": "^2.8.3",
     "sequelize": "^2.0.0-rc2",
+    "stripe": "^3.0.2",
     "underscore": "^1.7.0"
   },
   "devDependencies": {

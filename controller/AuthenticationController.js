@@ -1,12 +1,10 @@
-module.exports = (function (db) {
+module.exports = (function (_, db, Controller, jwt, ServerConfig) {
   'use strict';
 
-  var jwt           = require('jwt-simple'),
-      ServerConfig  = require('../config/Server'),
-      DAY           = 1000 * 60 * 60 * 24,
+  var DAY           = 1000 * 60 * 60 * 24,
       AuthenticationController;
 
-  AuthenticationController = {
+  AuthenticationController = _.extend(Controller, {
     _verify: function (body) {
       return body && body.email && body.password;
     },
@@ -63,9 +61,13 @@ module.exports = (function (db) {
         });
       }
     }
-  }
+  });
 
   return AuthenticationController.API;
 })(
-  require('../models')
+  require('underscore'),
+  require('../models'),
+  require('./Controller'),
+  require('jwt-simple'),
+  require('../config/Server')
 );

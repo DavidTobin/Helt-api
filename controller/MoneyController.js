@@ -16,6 +16,12 @@ module.exports = (function (_, db, Controller) {
       }
     },
 
+    _sendError: function (err) {
+      return this.json(400, {
+        error: err
+      });
+    },
+
     API: {
       create: function (req, res, next) {
         if (!GymController._verify('create', req.body)) {
@@ -81,12 +87,12 @@ module.exports = (function (_, db, Controller) {
         return res.json([
           {
             date: +new Date() - (DAY),
-            calories: -20021
+            calories: -1221
           },
 
           {
             date: +new Date() - (DAY * 2),
-            calories: -24000
+            calories: -1200
           },
 
           {

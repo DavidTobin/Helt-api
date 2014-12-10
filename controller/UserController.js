@@ -1,7 +1,7 @@
-module.exports = (function (db) {
+module.exports = (function (_, db, Controller) {
 	'use strict';
 
-	var UserController =  {
+	var UserController =  _.extend(Controller, {
     _verify: function (type, data) {
       switch (type) {
         case 'create':
@@ -111,9 +111,12 @@ module.exports = (function (db) {
 					});
 			}
 		}
-	};
+	});
 
 	return UserController.API;
 })(
-	require('../models')
+  require('underscore'),
+	require('../models'),
+  require('./Controller')
+
 );
