@@ -2,22 +2,6 @@ module.exports = (function (_, db, Controller) {
 	'use strict';
 
 	var UserController =  _.extend(Controller, {
-    _verify: function (type, data) {
-      switch (type) {
-        case 'create':
-          return data && data.name && data.email;
-
-        case 'update':
-          return data && data.id;
-      }
-    },
-
-		_sendError: function (err) {
-			return this.json(400, {
-				error: err
-			});
-		},
-
 		_createUser: function (req, res, next) {
 			var user = db.User.build(req.body);
 
@@ -82,10 +66,6 @@ module.exports = (function (_, db, Controller) {
 				if (req.user) {
 					return UserController._sendError.bind(res)('You are already logged in');
 				}
-
-        if (!UserController._verify('create', req.body)) {
-          return UserController._sendError.bind(res)('Missing required parameter');
-        }
 
 				return UserController._createUser(req, res, next);
 			},

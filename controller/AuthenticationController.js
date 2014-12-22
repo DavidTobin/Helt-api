@@ -5,24 +5,10 @@ module.exports = (function (_, db, Controller, jwt, ServerConfig) {
       AuthenticationController;
 
   AuthenticationController = _.extend(Controller, {
-    _verify: function (body) {
-      return body && body.email && body.password;
-    },
-
-    _error: function (error) {
-      return this.json(400, error);
-    },
 
     API: {
       token: function (req, res) {
         var token = '';
-
-        if (!AuthenticationController._verify(req.body)) {
-          return AuthenticationController._error.bind(res)({
-            key: 'missing_parameters',
-            msg: 'Missing parameters'
-          });
-        }
 
         db.User.find({
           where: {

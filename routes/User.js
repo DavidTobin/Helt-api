@@ -1,4 +1,4 @@
-module.exports = (function (UserController) {
+module.exports = (function (UserController, Validators) {
 	return [
 		{
 			type: 'get',
@@ -17,7 +17,8 @@ module.exports = (function (UserController) {
 		{
 			type: 'post',
 			url: '/user',
-			func: UserController.create
+			func: UserController.create,
+      validator: Validators.user.create
 		},
 
 		{
@@ -28,5 +29,6 @@ module.exports = (function (UserController) {
 		}
 	];
 })(
-	require('../controller/UserController')
+	require('../controller/UserController'),
+  require('../validators')
 );

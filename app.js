@@ -1,13 +1,14 @@
-var ServerConfig 	  = require('./config/Server'),
-		ServerHelper    = require('./helper/Server'),
-    AuthHelper      = require('./helper/Authentication'),
-    RoleHelper      = require('./helper/Roles'),
-		Routes			 	  = require('./routes'),
-		restify 			  = require('restify'),
-		_							  = require('underscore'),
-    db              = require('./models'),
-    hash            = require('password-hash'),
-    jwt             = require('jwt-simple'),
+var ServerConfig 	    = require('./config/Server'),
+		ServerHelper      = require('./helper/Server'),
+    AuthHelper        = require('./helper/Authentication'),
+    RoleHelper        = require('./helper/Roles'),
+		Routes			      = require('./routes'),
+		restify 	 	      = require('restify'),
+    restifyValidation = require('node-restify-validation'),
+		_							    = require('underscore'),
+    db                = require('./models'),
+    hash              = require('password-hash'),
+    jwt               = require('jwt-simple'),
 		server;
 
 // Required for authorization
@@ -21,6 +22,10 @@ server.use(ServerHelper.ensureJSON);
 server.use(ServerHelper.customHeaders);
 server.use(AuthHelper.checkToken);
 server.use(restify.bodyParser());
+server.use(restifyValidation.validationPlugin( {
+  errorsAsArray: true,
+  errorHandler: restify.errors.InvalidArgumentError
+}));
 server.use(restify.throttle(ServerConfig.throttle));
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.CORS(ServerConfig.CORS));
@@ -30,7 +35,10 @@ server.use(restify.fullResponse());
 
 // Route handling
 _.each(Routes, function (options) {
-  server[options.type](options.url, function (req, res, next) {
+  server[options.type]({
+    url: options.url,
+    validation: options.validator
+  }, function (req, res, next) {
     // Check roles
     if (options.roles) {
       if (!RoleHelper.checkRole(options.roles, req)) {
