@@ -16,12 +16,6 @@ module.exports = (function (_, db, Controller) {
       }
     },
 
-    _sendError: function (err) {
-      return this.json(400, {
-        error: err
-      });
-    },
-
     API: {
       create: function (req, res, next) {
         if (!GymController._verify('create', req.body)) {

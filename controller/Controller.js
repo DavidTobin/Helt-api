@@ -5,6 +5,8 @@ module.exports = (function () {
   Controller;
 
   Controller = {
+    super: this,
+
     _error: function (error) {
       return this.json(400, error);
     },

@@ -9,6 +9,21 @@ var _         = require('underscore');
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db        = {};
 
+var devUsers  = require('../devusers.json'), devBuildUsers = [];
+
+_.each(devUsers.results, function (devUser) {
+  console.log(devUser);
+  devBuildUsers.push({
+    name: [
+      devUser.user.name.first.charAt(0).toUpperCase() + devUser.user.name.first.slice(1),
+      devUser.user.name.last.charAt(0).toUpperCase() + devUser.user.name.last.slice(1)
+    ].join(' '),
+    email: devUser.user.email,
+    password: devUser.user.password,
+    gender: devUser.user.gender
+  });
+});
+
 fs
   .readdirSync(__dirname)
   .filter(function(file) {
@@ -35,29 +50,23 @@ setTimeout(function () {
     .success(function (gym) {
       console.log('Created default gym...');
 
-      _.each(config.defaultUsers, function (defaultUser) {
+      _.each(config.defaultUsers.concat(devBuildUsers), function (defaultUser) {
         db.User
           .build(defaultUser)
           .save()
           .error(function (err) {
-            return console.error(err);
+            // return console.error(err);
           })
           .success(function (user) {
-            var roles = defaultUser.roles;
-
-            roles.push('user');
-
-            console.log('Created dev user...');
-            if (user) {
-              user.updateAttributes({
-                roles: roles
-              }).success(function (u) {
-                console.log('Updated roles to ', roles, u.roles);
+            user
+              .addRole(defaultUser.roles, true)
+              .save()
+              .success(function (u) {
+                console.log(user.name + ' created...', u.roles);
               });
-            }
           });
       });
-    })
+    });
 }, 1000);
 
 module.exports = db;

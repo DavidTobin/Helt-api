@@ -29,21 +29,7 @@ module.exports = (function () {
 		    	weight: 200,
 		    	weightGoal: -2,
 		    	energyExpenditure: 1.2,
-		    	roles: ['admin']
-	    	},
-
-	    	{
-	    		name: 'John Doe',
-		    	email: 'john@gmail.com',
-		    	password: 'admin',
-		    	gymId: 1,
-		    	gender: 'male',
-		    	height: 180,
-		    	age: 22,
-		    	weight: 200,
-		    	weightGoal: -2,
-		    	energyExpenditure: 1.2,
-		    	roles: ['user']
+		    	roles: ['admin', 'user']
 	    	}
 	    ],
 

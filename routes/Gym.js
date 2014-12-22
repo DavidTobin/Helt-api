@@ -1,16 +1,19 @@
+'use strict';
+
 module.exports = (function (GymController) {
   return [
     {
       type: 'get',
       url: '/gym',
-      func: GymController.readAll
+      func: GymController.readAll,
+      roles: ['loggedIn']
     },
 
     {
       type: 'post',
       url: '/gym',
       func: GymController.create,
-      roles: []
+      roles: ['loggedIn', 'isSuperUser']
     },
 
     {
@@ -31,7 +34,7 @@ module.exports = (function (GymController) {
       type: 'get',
       url: '/user/:id/gym/:gymId/work',
       func: GymController.readWork,
-      roles: ['loggedIn']
+      roles: ['self']
     }
   ];
 })(

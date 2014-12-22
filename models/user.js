@@ -3,9 +3,11 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-  var hash = require('password-hash');
+  var hash  = require('password-hash'),
+      _     = require('underscore'),
+      User;
 
-  var User = sequelize.define('User', {
+  User = sequelize.define('User', {
     name: {
       type: DataTypes.STRING,
       allowNull: false
@@ -121,6 +123,27 @@ module.exports = function(sequelize, DataTypes) {
 
       isSuperUser: function () {
         return this.values.roles.indexOf('admin') !== -1;
+      },
+
+      addRole: function (role, force) {
+        var roles;
+
+        if (!role || (!this.isSuperUser() && !force)) {
+          return this;
+        }
+
+        roles = this.getDataValue('roles');
+        roles.push(role);
+
+        this.setDataValue('roles', _.uniq(_.flatten(roles)));
+
+        return this;
+      },
+
+      removeRole: function (role) {
+        this.setDataValue('roles', _.without(this.getDataValue('roles'), role));
+
+        return this;
       }
     }
   });

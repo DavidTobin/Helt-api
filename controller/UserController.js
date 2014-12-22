@@ -1,16 +1,17 @@
+/* global require, module */
+
 module.exports = (function (_, db, Controller) {
 	'use strict';
 
-	var UserController =  _.extend(Controller, {
-		_createUser: function (req, res, next) {
+	var UserController =  _.extend({}, Controller, {
+		_createUser: function (req, res) {
 			var user = db.User.build(req.body);
 
       if (!user.validate()) {
-        UserController._sendError.bind(res)(user.validate());
+        this._error.bind(res)(user.validate());
       }
 
       user
-      .validate()
 			.save()
 			.success(function (user) {
 				return res.json(user);
@@ -22,81 +23,82 @@ module.exports = (function (_, db, Controller) {
       });
 		},
 
-		_updateUser: function (req, res, next) {
+		_updateUser: function (req, res) {
 			this
 				.updateAttributes(req.body)
-        .validate()
 				.success(function (user) {
 					return res.json(user);
 				})
         .error(function (err) {
-          return UserController._sendError.bind(res)(err);
+          return this._error.bind(res)(err);
         });
 		},
 
-		API: {
-      read: function (req, res) {
-        if (parseInt(req.params.id) > 0) {
-          db.User
-            .find(req.params.id)
-            .success(function (user) {
-              if (!user) {
-                return UserController._sendError.bind(res)('User not found');
-              }
+		API: function () {
+      var $super = this;
 
-              return res.json(user);
-            });
-        } else {
-          return UserController._sendError.bind(res)('Missing parameter: id');
-        }
-      },
+      return {
+        read: function (req, res) {
+          if (parseInt(req.params.id) > 0) {
+            db.User
+              .find(req.params.id)
+              .success(function (user) {
+                if (!user) {
+                  return $super._error.bind(res)('User not found');
+                }
 
-      readAll: function (req, res) {
-      	db.User
-      		.findAll()
-      		.success(function (users) {
-      			return res.json(users);
-      		})
-      		.error(function (error) {
-      			return UserController._sendError.bind(res)(error);
-      		});
-      },
+                return res.json(user);
+              });
+          } else {
+            return $super._error.bind(res)('Missing parameter: id');
+          }
+        },
 
-			create: function (req, res, next) {
-				if (req.user) {
-					return UserController._sendError.bind(res)('You are already logged in');
-				}
+        readAll: function (req, res) {
+        	db.User
+        		.findAll()
+        		.success(function (users) {
+        			return res.json(users);
+        		})
+        		.error(function (error) {
+        			return $super._error.bind(res)(error);
+        		});
+        },
 
-				return UserController._createUser(req, res, next);
-			},
+  			create: function (req, res, next) {
+  				if (req.user) {
+  					return $super._error.bind(res)('You are already logged in');
+  				}
 
-			update: function (req, res, next) {
-        if (!UserController._verify('update', req.params)) {
-          return UserController._sendError.bind(res)('No user to update');
-        }
+  				return $super._createUser(req, res, next);
+  			},
 
-        // Make sure roles aren't updated
-        if (req.body.roles && !req.user.isSuperUser()) {
-        	req.body.roles = req.user.roles;
-        }
+  			update: function (req, res, next) {
+          // Make sure roles aren't updated
+          if (req.body.roles && !req.user.isSuperUser()) {
+          	req.body.roles = req.user.roles;
+          }
 
-				db.User
-					.find(req.params.id)
-					.success(function (user) {
-						if (!user) {
-							return UserController._sendError.bind(res)('User not found');
-						}
+  				db.User
+  					.find(req.params.id)
+  					.success(function (user) {
+  						if (!user) {
+  							return $super._error.bind(res)('User not found');
+  						}
 
-						return UserController._updateUser.bind(user)(req, res, next);
-					});
-			}
+  						return $super._updateUser.bind(user)(req, res, next);
+  					}.bind(this))
+            .error(function (err) {
+              return $super._error.bind(res)(err);
+            }.bind(this));
+  			}
+      };
 		}
 	});
 
-	return UserController.API;
+	return UserController.API.bind(UserController)();
 })(
   require('underscore'),
 	require('../models'),
   require('./Controller')
-
 );

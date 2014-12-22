@@ -1,3 +1,5 @@
+/* global module, require */
+
 module.exports = (function (_, db, Controller, jwt, ServerConfig) {
   'use strict';
 

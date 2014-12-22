@@ -1,9 +1,9 @@
 module.exports = (function (_, AboutConfig, Controller) {
 	'use strict';
 
-	var AboutController = _.extend(Controller, {
+	var AboutController = _.extend({}, Controller, {
 		API: {
-			index: function (req, res, next) {
+			index: function (req, res) {
 				return res.json(418, AboutConfig);
 			}
 		}

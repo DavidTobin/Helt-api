@@ -8,6 +8,7 @@ module.exports = (function (fs) {
     return (file.indexOf(".") !== 0) && (file !== "index.js");
   })
   .forEach(function(file) {
+    console.log(require('./' + file));
     routes = routes.concat(require('./' + file));
   });
 
