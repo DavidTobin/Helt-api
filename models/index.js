@@ -60,10 +60,7 @@ setTimeout(function () {
           .success(function (user) {
             user
               .addRole(defaultUser.roles, true)
-              .save()
-              .success(function (u) {
-                console.log(user.name + ' created...', u.roles);
-              });
+              .save();
           });
       });
     });

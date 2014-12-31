@@ -12,6 +12,8 @@ module.exports = (function (fs) {
     routes = routes.concat(require('./' + file));
   });
 
+  console.log(routes);
+
   return routes;
 })(
   require('fs')
