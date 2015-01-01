@@ -50,7 +50,7 @@ setTimeout(function () {
     .success(function (gym) {
       console.log('Created default gym...');
 
-      _.each(config.defaultUsers.concat(devBuildUsers), function (defaultUser) {
+      _.each(config.defaultUsers, function (defaultUser) {
         db.User
           .build(defaultUser)
           .save()
@@ -60,7 +60,12 @@ setTimeout(function () {
           .success(function (user) {
             user
               .addRole(defaultUser.roles, true)
-              .save();
+              .save()
+              .success(function (u) {
+                console.log(user.name + ' created...', u.roles);
+
+                db.User.bulkCreate(devBuildUsers);
+              });
           });
       });
     });
